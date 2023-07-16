@@ -114,7 +114,8 @@ $(document).ready(function() {
 						<div>
 
 							<b class="title text-muted">Welcome {{user.first_name}}</b>
-							<a href="{% url 'logout' %}">Logout</a>
+							<a href="{% url 'logout' %}"> Profile </a> <span class="dark-transp"> | </span>
+						<a href="{% url 'logout' %}"> Logout </a>
 						</div>
 						{% endif %}
 					</div>

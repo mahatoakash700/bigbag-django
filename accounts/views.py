@@ -13,6 +13,8 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 
+from django.http import HttpResponse
+
 # Create your views here.
 
 
@@ -55,8 +57,8 @@ def register(request):
                 send_email = EmailMessage(mail_subject, message, to=[to_email])
                 send_email.send()
 
-                messages.success(request, "Registration successful")
-            return redirect('activate')
+                messages.success(request, "Email activation link sent")
+            return render(request, 'accounts/activate.html')
         else:
             print(form.errors)
             for errors in form.errors.items():
@@ -72,12 +74,25 @@ def register(request):
 
 
 def activate(request):
-    # success_message = messages.get_messages(request)
-    # messages_list = [m for m in success_message]
-    # context = {
-    #     'success_message': messages_list[0].message if messages_list else None
-    # }
     return render(request, 'accounts/activate.html')
+
+
+def activateAccount(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = Account._default_manager.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, Account.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        messages.success(
+            request, "Congratulations.Your account has acgtivated")
+        return redirect('login')
+    else:
+        messages.error(request, "Invalid activation link")
+        return redirect('register')
 
 
 def signin(request):

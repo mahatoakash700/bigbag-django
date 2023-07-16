@@ -12,15 +12,7 @@
 <body>
     {% if messages %}
     {% for message in messages %}
-    <div class="message" id="message">
-        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-            <strong>{{message}}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            <!-- <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button> -->
-        </div>
-    </div>
+    {% include 'includes/alerts.html' %}
     {% endfor %}
     {% endif %}
     <h1>Please activate your account sent in your Email...</h1>
